@@ -51,6 +51,7 @@ print(f"Connected to qBittorrent Version: {client.app_version()} on {client.host
 
 bot = commands.Bot(command_prefix='!')
 
+# to do: say goodbye on graceful shutdown
 @bot.event
 async def on_ready():
     print(
@@ -99,6 +100,12 @@ async def looper():
                 message = (f"{response.torrents[torrent].state} {torrent_name_cache[torrent]} {torrent}")
                 print(message)
                 if (response.torrents[torrent].state not in excluded_state): # send the message on discord only if not excluded
+                    await bot.get_channel(channel).send(message)
+            if ("progress" in response.torrents[torrent]):
+                if (response.torrents[torrent].progress == 1):
+                    # Torrent Complete!
+                    message = (f"Hey, {torrent_name_cache[torrent]} has just completed downloading!")
+                    print(message)
                     await bot.get_channel(channel).send(message)
     if(hasattr(response,"torrents_removed")):
         for torrent in response.torrents_removed:
