@@ -1,6 +1,9 @@
 # bot.py
 import os
 import platform
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 from qbittorrentapi import Client
 
@@ -84,6 +87,12 @@ async def looper():
     rid = response.rid
     if(hasattr(response,"torrents")):
         for torrent in response.torrents:
+            if (not torrent in torrent_name_cache):
+                # New torrent!
+                message = (f"Hey, {response.torrents[torrent].name} was just added")
+                # to do: check if a category is assigned, if not, ask to assign one
+                print(message)
+                await bot.get_channel(channel).send(message)
             if (hasattr (response.torrents[torrent],"name")):
                 torrent_name_cache[torrent]=response.torrents[torrent].name
             if (hasattr (response.torrents[torrent],"state")):
