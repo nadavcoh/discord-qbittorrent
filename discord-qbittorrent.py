@@ -15,6 +15,29 @@ qbittorrent_host = os.getenv('QBITTORRENT_HOST')
 qbittorrent_user = os.getenv('QBITTORRENT_USER')
 qbittorrent_pass = os.getenv('QBITTORRENT_PASS')
 
+possible_state = [ # Possible values of state:
+    "error",	# Some error occurred, applies to paused torrents
+    "missingFiles",	# Torrent data files is missing
+"uploading",	# Torrent is being seeded and data is being transferred
+"pausedUP",	# Torrent is paused and has finished downloading
+"queuedUP",	# Queuing is enabled and torrent is queued for upload
+"stalledUP",	# Torrent is being seeded, but no connection were made
+"checkingUP",	# Torrent has finished downloading and is being checked
+"forcedUP",	# Torrent is forced to uploading and ignore queue limit
+"allocating",	# Torrent is allocating disk space for download
+"downloading",	# Torrent is being downloaded and data is being transferred
+"metaDL",	# Torrent has just started downloading and is fetching metadata
+"pausedDL",	# Torrent is paused and has NOT finished downloading
+"queuedDL",	# Queuing is enabled and torrent is queued for download
+"stalledDL",	# Torrent is being downloaded, but no connection were made
+"checkingDL",	# Same as checkingUP, but torrent has NOT finished downloading
+"forceDL",	    # Torrent is forced to downloading to ignore queue limit
+"checkingResumeData",	# Checking resume data on qBt startup
+"moving",	# Torrent is moving to another location
+"unknown"]	# Unknown status
+
+excluded_state = ["queuedUP", "stalledUP", "uploading"] # exclude spamming updates about upload queue
+
 uname = platform.uname()
 running_on = f"{uname[0]} {uname[1]}"
 print(f"Running on {running_on}")
@@ -66,7 +89,8 @@ async def looper():
             if (hasattr (response.torrents[torrent],"state")):
                 message = (f"{response.torrents[torrent].state} {torrent_name_cache[torrent]} {torrent}")
                 print(message)
-                await bot.get_channel(channel).send(message)
+                if (response.torrents[torrent].state not in excluded_state): # send the message on discord only if not excluded
+                    await bot.get_channel(channel).send(message)
     if(hasattr(response,"torrents_removed")):
         for torrent in response.torrents_removed:
             message = (f"Removed {torrent_name_cache[torrent]} {torrent}")
