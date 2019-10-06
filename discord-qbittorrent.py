@@ -4,6 +4,7 @@ import platform
 import logging
 
 logging.basicConfig(level=logging.INFO)
+# todo: get level from env
 
 from qbittorrentapi import Client
 
@@ -48,7 +49,7 @@ print(f"Running on {running_on}")
 client = Client(host=qbittorrent_host, username=qbittorrent_user, password=qbittorrent_pass)
 
 print(f"Connected to qBittorrent Version: {client.app_version()} on {client.host}")
-
+rid=0
 bot = commands.Bot(command_prefix='!')
 
 # to do: say goodbye on graceful shutdown
