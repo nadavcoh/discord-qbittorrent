@@ -4,14 +4,6 @@ import platform
 
 from qbittorrentapi import Client
 
-uname = platform.uname()
-running_on = f"{uname[0]} {uname[1]}"
-print(f"Running on {running_on}")
-
-client = Client(host='', username='', password='')
-
-print(f"Connected to qBittorrent Version: {client.app_version()} on {client.host}")
-
 from discord.ext import commands, tasks
 
 from dotenv import load_dotenv
@@ -19,6 +11,17 @@ from dotenv import load_dotenv
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
 channel = int(os.getenv('DISCORD_CHAN'))
+qbittorrent_host = os.getenv('QBITTORRENT_HOST')
+qbittorrent_user = os.getenv('QBITTORRENT_USER')
+qbittorrent_pass = os.getenv('QBITTORRENT_PASS')
+
+uname = platform.uname()
+running_on = f"{uname[0]} {uname[1]}"
+print(f"Running on {running_on}")
+
+client = Client(host=qbittorrent_host, username=qbittorrent_user, password=qbittorrent_pass)
+
+print(f"Connected to qBittorrent Version: {client.app_version()} on {client.host}")
 
 bot = commands.Bot(command_prefix='!')
 
