@@ -1,6 +1,6 @@
 # bot.py
-
 import os
+import platform
 
 from qbittorrentapi import Client
 
@@ -15,15 +15,13 @@ qbittorrent_host = os.getenv('QBITTORRENT_HOST')
 qbittorrent_user = os.getenv('QBITTORRENT_USER')
 qbittorrent_pass = os.getenv('QBITTORRENT_PASS')
 
-uname = os.uname()
+uname = platform.uname()
 running_on = f"{uname[0]} {uname[1]}"
 print(f"Running on {running_on}")
 
 client = Client(host=qbittorrent_host, username=qbittorrent_user, password=qbittorrent_pass)
 
 print(f"Connected to qBittorrent Version: {client.app_version()} on {client.host}")
-
-
 
 bot = commands.Bot(command_prefix='!')
 
