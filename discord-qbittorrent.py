@@ -45,13 +45,14 @@ excluded_state = ["queuedUP", "stalledUP", "uploading"] # exclude spamming updat
 uname = platform.uname()
 running_on = f"{uname[0]} {uname[1]}"
 print(f"Running on {running_on}")
-
+# todo: print git version
+# https://stackoverflow.com/questions/14989858/get-the-current-git-hash-in-a-python-script
 client = Client(host=qbittorrent_host, username=qbittorrent_user, password=qbittorrent_pass)
-
+# todo: handle connection errors
 print(f"Connected to qBittorrent Version: {client.app_version()} on {client.host}")
 rid=0
 bot = commands.Bot(command_prefix='!')
-
+# todo: handle reconnects better
 # to do: say goodbye on graceful shutdown
 @bot.event
 async def on_ready():
